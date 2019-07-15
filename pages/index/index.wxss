@@ -1,0 +1,7 @@
+page{
+  overflow: scroll;
+}
+canvas{
+  width: 1500px;
+  height: 2668px;
+}
