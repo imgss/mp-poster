@@ -6,10 +6,12 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
+		"enhance": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
+		"nodeModules": false,
 		"autoAudits": false,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
@@ -21,7 +23,7 @@
 		}
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.7.5",
+	"libVersion": "2.7.4",
 	"appid": "wxb36b848cc66c51f7",
 	"projectname": "canvas",
 	"debugOptions": {

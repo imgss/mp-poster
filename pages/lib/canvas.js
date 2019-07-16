@@ -1,19 +1,31 @@
+
 class Sprite {
   constructor(config) {
-    this.left = config.left
-    this.top = config.top
+    this.x = config.x
+    this.y = config.y
     this.width = config.width
     this.height = config.height
   }
 }
+
 class Image extends Sprite {
   constructor (config) {
     super(config)
     this.src = config.src
+    this.radius = config.radius
   }
 
-  draw(ctx) {
-    ctx.drawImage(this.src, 0, 0, this.width, this.height)
+  async draw(ctx) {
+    ctx.save()
+    let src = await downImg(this.src)
+    if (this.radius === '50%') {
+      this.r = this.width / 2
+      ctx.beginPath()
+      ctx.arc(this.x + this.r, this.y + this.r, this.r, 0, 2*Math.PI)
+      ctx.clip()
+    }
+    ctx.drawImage(src, this.x, this.y, this.width, this.height)
+    ctx.restore()
   }
 }
 
@@ -22,22 +34,83 @@ class Text extends Sprite {
   constructor (config) {
     super(config)
     this.text = config.text
-  }
-}
-export default function(ctx, steps) {
-  console.log(ctx, steps)
-  let omTree = []
-  const typeMap = {
-    img: Image,
-    text: Text
-  }
-  for (let step of steps) {
-    omTree.push(new typeMap[step.type](step))
+    this.color = config.color
+    this.fontSize = config.fontSize
   }
 
-  for (let om of omTree) {
-    om.draw(ctx)
+  async draw(ctx) {
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.fontSize = this.fontSize
+    ctx.fillText(this.text, this.x, this.y + this.fontSize);
+    ctx.restore();
   }
-  ctx.draw()
-
 }
+
+function downImg(url) {
+  return new Promise(function(resolve, reject) {
+    wx.downloadFile({
+      url: url,
+      success: (res)=>{
+        resolve(res.tempFilePath)
+      },
+      fail: ()=>{
+        reject(err)
+      }
+    });
+  })
+}
+
+class Poster {
+  constructor(width, height, scale, canvasId) {
+    this.width = width
+    this.height = height
+    this.scale = scale
+    this.canvasId = canvasId
+    this.ctx = wx.createCanvasContext(canvasId);
+  }
+  async draw(steps) {
+    console.log(ctx, steps)
+    let ctx = this.ctx
+    ctx.scale(this.scale, this.scale)
+    let omTree = []
+    const typeMap = {
+      img: Image,
+      text: Text
+    }
+    for (let step of steps) {
+      omTree.push(new typeMap[step.type](step))
+    }
+
+    for (let om of omTree) {
+      await om.draw(ctx)
+    }
+    ctx.draw()
+  }
+  clear() {
+    this.ctx.scale(1, 1);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.draw();
+  }
+  save() {
+    return new Promise((resolve, reject) => {
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        width: this.width,
+        height: this.height,
+        canvasId: this.canvasId,
+        quality: 0.8,
+        success(res) {
+          console.log(res)
+          resolve(res.tempFilePath)
+        },
+        fail(err) {
+          reject(err)
+        }
+      })
+    })
+  }
+}
+
+export default Poster
