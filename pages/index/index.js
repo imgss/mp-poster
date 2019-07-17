@@ -22,7 +22,7 @@ Page({
       y: 75,
       text: '认真细心',
       color: '#000000',
-      fontSize: 6.5
+      font: '7px sans-serif'
     },{
       type: 'img',
       x: 70,
@@ -38,8 +38,23 @@ Page({
       width: 15,
       height: 15,
       src: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJV8b5F5w9TRtnIvZEX0VHYTC8k1icXIkh2eh5dyytRd8Njicld2vFcbBicryLAsibxVEicdvLaE9tc7yQ/132'
+    },{
+      type: 'img',
+      x: '+8',
+      y: 317,
+      radius: '50%',
+      width: 15,
+      height: 15,
+      src: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJV8b5F5w9TRtnIvZEX0VHYTC8k1icXIkh2eh5dyytRd8Njicld2vFcbBicryLAsibxVEicdvLaE9tc7yQ/132'
+    },{
+      type: 'text',
+      x: 69,
+      y: 317,
+      text: '都送出了祝福',
+      color: '#ffffff',
+      font: '10px sans-serif'
     })
-    let poster = new Poster(225, 400, 4, 'app')
+    let poster = new Poster(225, 400, 3, 'app')
     console.log(poster)
     poster.draw(steps).then((tmpPath) => {
       console.log('success')

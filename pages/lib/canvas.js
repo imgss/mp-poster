@@ -35,13 +35,15 @@ class Text extends Sprite {
     super(config)
     this.text = config.text
     this.color = config.color
-    this.fontSize = config.fontSize
+    this.font = config.font
+    this.fontSize = +this.font.match(/\d+/)[0]
+    console.log(this.fontSize)
   }
 
   async draw(ctx) {
     ctx.save();
     ctx.fillStyle = this.color;
-    ctx.fontSize = this.fontSize * 4
+    ctx.font = this.font
     ctx.fillText(this.text, this.x, this.y + this.fontSize);
     ctx.restore();
   }
@@ -78,8 +80,12 @@ class Poster {
       img: Image,
       text: Text
     }
-    for (let step of steps) {
-      omTree.push(new typeMap[step.type](step))
+    for (let i = 0, len = steps.length; i < len; i++) {
+      let sprite = steps[i];
+      if (i > 0 && /^\+\d+$/.test(sprite.x)) {
+        sprite.x = steps[i - 1].x + Number(sprite.x.slice(1))
+      }
+      omTree.push(new typeMap[sprite.type](sprite))
     }
 
     for (let om of omTree) {
