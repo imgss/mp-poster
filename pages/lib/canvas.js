@@ -41,7 +41,7 @@ class Text extends Sprite {
   async draw(ctx) {
     ctx.save();
     ctx.fillStyle = this.color;
-    ctx.fontSize = this.fontSize
+    ctx.fontSize = this.fontSize * 4
     ctx.fillText(this.text, this.x, this.y + this.fontSize);
     ctx.restore();
   }
@@ -85,31 +85,31 @@ class Poster {
     for (let om of omTree) {
       await om.draw(ctx)
     }
-    ctx.draw()
+    return new Promise((resolve, reject) => {
+      ctx.draw(false, () => {
+        wx.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          width: this.width * this.scale,
+          height: this.height * this.scale,
+          canvasId: this.canvasId,
+          quality: 0.8,
+          success(res) {
+            console.log(res)
+            resolve(res.tempFilePath)
+          },
+          fail(err) {
+            reject(err)
+          }
+        })
+      })
+    })
+
   }
   clear() {
     this.ctx.scale(1, 1);
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.draw();
-  }
-  save() {
-    return new Promise((resolve, reject) => {
-      wx.canvasToTempFilePath({
-        x: 0,
-        y: 0,
-        width: this.width,
-        height: this.height,
-        canvasId: this.canvasId,
-        quality: 0.8,
-        success(res) {
-          console.log(res)
-          resolve(res.tempFilePath)
-        },
-        fail(err) {
-          reject(err)
-        }
-      })
-    })
   }
 }
 

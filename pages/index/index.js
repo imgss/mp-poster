@@ -4,6 +4,7 @@ const app = getApp()
 import Poster from '../lib/canvas'
 Page({
   data: {
+    src: ''
   },
 
   onLoad: function () {
@@ -40,17 +41,16 @@ Page({
     })
     let poster = new Poster(225, 400, 4, 'app')
     console.log(poster)
-    poster.draw(steps).then(() => {
+    poster.draw(steps).then((tmpPath) => {
       console.log('success')
-      poster.save().then(path => console.log(path))
-    })
-  },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+      this.setData({
+        src: tmpPath
+      })
+      // wx.saveImageToPhotosAlbum({
+      //   filePath: tmpPath,
+      //   success: ()=>{},
+      //   fail: ()=>{}
+      // });
     })
   }
 })

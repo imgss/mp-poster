@@ -1,2 +1,3 @@
 <!--index.wxml-->
+<image src="{{src}}" mode="widthFix"/>
 <canvas canvas-id="app"></canvas>
