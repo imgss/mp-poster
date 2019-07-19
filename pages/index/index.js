@@ -50,8 +50,16 @@ Page({
       type: 'text',
       x: 69,
       y: 317,
-      text: '都送出了祝福',
+      text: '都送出了祝福😊',
       color: '#ffffff',
+      font: '10px sans-serif'
+    },{
+      type: 'text',
+      x: 48,
+      y: 250,
+      width: 142,
+      text: '“妈妈希望你在新的一岁平安健康快乐成长！“',
+      color: '#222333',
       font: '10px sans-serif'
     })
     let poster = new Poster(225, 400, 3, 'app')

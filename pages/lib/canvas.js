@@ -36,6 +36,7 @@ class Text extends Sprite {
     this.text = config.text
     this.color = config.color
     this.font = config.font
+    this.width = config.width
     this.fontSize = +this.font.match(/\d+/)[0]
     console.log(this.fontSize)
   }
@@ -44,7 +45,23 @@ class Text extends Sprite {
     ctx.save();
     ctx.fillStyle = this.color;
     ctx.font = this.font
-    ctx.fillText(this.text, this.x, this.y + this.fontSize);
+    if (this.width) {
+      let len = Math.floor(this.width / this.fontSize)
+      let row = Math.ceil(this.width / len)
+      if (row === 1) {
+        ctx.fillText(this.text, this.x, this.y + this.fontSize);
+      } else {
+        let arr = []
+        for (let i = 0; i < row; i++) {
+          arr.push(this.text.substr(i * len, len))
+        }
+        arr.forEach((str, i) => ctx.fillText(str, this.x, this.y + this.fontSize * (i + 1) * 1.2))
+      }
+
+    } else {
+      ctx.fillText(this.text, this.x, this.y + this.fontSize);
+    }
+
     ctx.restore();
   }
 }
