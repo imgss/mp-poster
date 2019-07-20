@@ -67,17 +67,25 @@ class Text extends Sprite {
 }
 
 function downImg(url) {
+  if (cache[url]) {
+    return Promise.resolve(cache[url])
+  }
   return new Promise(function(resolve, reject) {
     wx.downloadFile({
       url: url,
       success: (res)=>{
         resolve(res.tempFilePath)
+        cache[url] = res.tempFilePath
       },
       fail: ()=>{
         reject(err)
       }
     });
   })
+}
+
+const cache = {
+
 }
 
 class Poster {
@@ -99,9 +107,15 @@ class Poster {
     }
     for (let i = 0, len = steps.length; i < len; i++) {
       let sprite = steps[i];
+      // 解析简单的表达式
       if (i > 0 && /^\+\d+$/.test(sprite.x)) {
         sprite.x = steps[i - 1].x + Number(sprite.x.slice(1))
       }
+
+      if (i > 0 && /^\+\d+$/.test(sprite.y)) {
+        sprite.y = steps[i - 1].y + Number(sprite.y.slice(1))
+      }
+
       omTree.push(new typeMap[sprite.type](sprite))
     }
 
