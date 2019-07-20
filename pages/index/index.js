@@ -31,6 +31,12 @@ Page({
       height: 81,
       src: 'https://nnemp-product-1254101407.cos.ap-shanghai.myqcloud.com/icon/boy.png'
     },{
+      draw: function(ctx) {
+        
+        ctx.fillStyle = '#f00000';
+        ctx.fillRect(10, 10, 100, 100);
+      }
+    },{
       type: 'img',
       x: 20,
       y: 317,
@@ -70,7 +76,12 @@ Page({
       color: '#222333',
       font: '10px sans-serif'
     })
-    let poster = new Poster(225, 400, 3, 'app')
+    let poster = new Poster({
+      width: 225, 
+      height: 400, 
+      scale: 3, 
+      canvasId: 'app'
+    })
     console.log(poster)
     poster.draw(steps).then((tmpPath) => {
       console.log('success')

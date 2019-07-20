@@ -30,7 +30,7 @@
       type: 'img',
       x: 20,
       y: 317,
-      radius: '50%', // 一个原形图片
+      radius: '50%', // 一个圆形图片
       width: 15,
       height: 15,
       src: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJV8b5F5w9TRtnIvZEX0VHYTC8k1icXIkh2eh5dyytRd8Njicld2vFcbBicryLAsibxVEicdvLaE9tc7yQ/132'
@@ -52,22 +52,25 @@
       src: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJV8b5F5w9TRtnIvZEX0VHYTC8k1icXIkh2eh5dyytRd8Njicld2vFcbBicryLAsibxVEicdvLaE9tc7yQ/132'
     },{
       type: 'text',
-      x: '+16',
-      y: 317,
-      text: '都送出了祝福😊',
-      color: '#ffffff',
-      font: '10px sans-serif'
-    },{
-      type: 'text',
       x: 48,
       y: 250,
       width: 142, // 提过了文字宽度时，超出宽度会折行
       text: '“妈妈希望你在新的一岁平安健康快乐成长！“',
       color: '#222333',
       font: '10px sans-serif'
+    },{
+      draw: function(ctx) { // 传入一个有draw方法的object
+        ctx.fillStyle = '#f00000';
+        ctx.fillRect(10, 10, 100, 100);
+      }
     })
     // 创建一个poster实例
-    let poster = new Poster(225, 400, 3, 'app') // 海报的长度，高度， 缩放比，canvasId
+    let poster = new Poster({
+      width: 225, 
+      height: 400, 
+      scale: 3, 
+      canvasId: 'app'
+    }) // 海报的长度，高度， 缩放比，canvasId
 
     poster.draw(steps).then((tmpPath) => {
       console.log(tmpPath) //绘制完成后会拿到tmpPath
