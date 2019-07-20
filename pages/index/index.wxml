@@ -1,3 +1,8 @@
 <!--index.wxml-->
 <image src="{{src}}" mode="widthFix"/>
-<canvas canvas-id="app"></canvas>
+<view>临时路径： {{src}}</view>
+<button bindtap="getPoster">点击生成海报</button>
+<div style="position:fixed;top:0;left:-2000px">
+  <canvas canvas-id="app"></canvas>
+</div>
+

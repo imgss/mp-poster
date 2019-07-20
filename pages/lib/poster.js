@@ -35,16 +35,16 @@ class Text extends Sprite {
     super(config)
     this.text = config.text
     this.color = config.color
-    this.font = config.font
+    this.font = config.font || '12px sans-'
     this.width = config.width
     this.fontSize = +this.font.match(/\d+/)[0]
-    console.log(this.fontSize)
   }
 
   async draw(ctx) {
     ctx.save();
     ctx.fillStyle = this.color;
     ctx.font = this.font
+    // 判断是否需要折行
     if (this.width) {
       let len = Math.floor(this.width / this.fontSize)
       let row = Math.ceil(this.width / len)
@@ -65,10 +65,13 @@ class Text extends Sprite {
     ctx.restore();
   }
 }
-
+// 下载图片
 function downImg(url) {
+  if (/wxfile\:\/\//.test(url)) {
+    return cache[url]
+  }
   if (cache[url]) {
-    return Promise.resolve(cache[url])
+    return cache[url]
   }
   return new Promise(function(resolve, reject) {
     wx.downloadFile({
@@ -83,21 +86,21 @@ function downImg(url) {
     });
   })
 }
-
-const cache = {
-
-}
+// 图片临时地址缓存
+const cache = {}
 
 class Poster {
-  constructor(width, height, scale, canvasId) {
+  constructor({width, height, scale, canvasId}) {
+    if (canvasId) {
+      throw new Error('请传入canvasId')
+    }
     this.width = width
     this.height = height
-    this.scale = scale
+    this.scale = scale || 1
     this.canvasId = canvasId
     this.ctx = wx.createCanvasContext(canvasId);
   }
   async draw(steps) {
-    console.log(ctx, steps)
     let ctx = this.ctx
     ctx.scale(this.scale, this.scale)
     let omTree = []

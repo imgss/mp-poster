@@ -3,5 +3,9 @@ page{
 }
 canvas{
   width: 1500px;
-  height: 2668px;
+  height: 2000px;
+}
+image{
+  display: block;
+  margin: 0 auto;
 }
