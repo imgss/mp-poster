@@ -2,6 +2,12 @@
 
 看一个例子：
 
+```html
+<view style="position:fixed;top:0;left:-2000px">
+  <canvas canvas-id="app" style='width:1000px;height:2000px'></canvas>
+</view>
+```
+
 ```js
     // 绘制步骤
     let steps = []
@@ -54,7 +60,7 @@
       type: 'text',
       x: 48,
       y: 250,
-      width: 142, // 提过了文字宽度时，超出宽度会折行
+      width: 142, // 提过了文字宽度时，超出宽度会折行，\n可以强制换行
       text: '“妈妈希望你在新的一岁平安健康快乐成长！“',
       color: '#222333',
       font: '10px sans-serif'

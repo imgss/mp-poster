@@ -1,4 +1,3 @@
-
 class Sprite {
   constructor(config) {
     this.x = config.x;
@@ -45,15 +44,30 @@ class Text extends Sprite {
     ctx.fillStyle = this.color;
     ctx.font = this.font;
     // 判断是否需要折行
-    if (this.width) {
+    let multiLine = false;
+
+    if (/\n/.test(this.text)) {
+      multiLine = true;
+    }
+    console.log(multiLine);
+    if (this.width || multiLine) {
       let len = Math.floor(this.width / this.fontSize);
-      let row = Math.ceil(this.width / len);
+      let row = null;
+      let arr = [];
+      if (multiLine) {
+        arr = this.text.split('\n');
+        row = arr.length;
+      } else {
+        row = Math.ceil(this.width / len);
+      }
+
       if (row === 1) {
         ctx.fillText(this.text, this.x, this.y + this.fontSize);
       } else {
-        let arr = [];
-        for (let i = 0; i < row; i++) {
-          arr.push(this.text.substr(i * len, len));
+        if (!multiLine) {
+          for (let i = 0; i < row; i++) {
+            arr.push(this.text.substr(i * len, len));
+          }
         }
         arr.forEach((str, i) => ctx.fillText(str, this.x, this.y + this.fontSize * (i + 1) * 1.2));
       }
