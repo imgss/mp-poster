@@ -9,6 +9,15 @@
 ```
 
 ```js
+    // 创建一个poster实例
+    let poster = new Poster({
+      width: 225, 
+      height: 400, 
+      scale: 3, // 会生成675x1200的图像
+      canvasId: 'app'
+    }) // 海报的长度，高度， 缩放比，canvasId
+
+
     // 绘制步骤
     let steps = []
     steps.push({
@@ -60,7 +69,7 @@
       type: 'text',
       x: 48,
       y: 250,
-      width: 142, // 提过了文字宽度时，超出宽度会折行，\n可以强制换行
+      width: 142, // 超过了文字宽度时，超出宽度会折行，\n可以强制换行
       text: '“妈妈希望你在新的一岁平安健康快乐成长！“',
       color: '#222333',
       font: '10px sans-serif'
@@ -70,13 +79,7 @@
         ctx.fillRect(10, 10, 100, 100);
       }
     })
-    // 创建一个poster实例
-    let poster = new Poster({
-      width: 225, 
-      height: 400, 
-      scale: 3, 
-      canvasId: 'app'
-    }) // 海报的长度，高度， 缩放比，canvasId
+
 
     poster.draw(steps).then((tmpPath) => {
       console.log(tmpPath) //绘制完成后会拿到tmpPath
