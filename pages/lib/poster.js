@@ -1,3 +1,31 @@
+// 下载图片
+function downImg(url) {
+  if (!url) {
+    console.error('图片url 不能为空');
+    throw new Error('图片url 不能为空');
+  }
+  if (/wxfile\:\/\//.test(url)) {
+    return cache[url];
+  }
+  if (cache[url]) {
+    return cache[url];
+  }
+  return new Promise(function(resolve, reject) {
+    wx.downloadFile({
+      url: url,
+      success: (res)=>{
+        resolve(res.tempFilePath);
+        cache[url] = res.tempFilePath;
+      },
+      fail: (err)=>{
+        reject(err);
+      }
+    });
+  });
+}
+// 图片临时地址缓存
+const cache = {};
+
 class Sprite {
   constructor(config) {
     this.x = config.x;
@@ -49,7 +77,7 @@ class Text extends Sprite {
     if (/\n/.test(this.text)) {
       multiLine = true;
     }
-    console.log(multiLine);
+
     if (this.width || multiLine) {
       let len = Math.floor(this.width / this.fontSize);
       let row = null;
@@ -79,30 +107,6 @@ class Text extends Sprite {
     ctx.restore();
   }
 }
-
-// 下载图片
-function downImg(url) {
-  if (/wxfile\:\/\//.test(url)) {
-    return cache[url];
-  }
-  if (cache[url]) {
-    return cache[url];
-  }
-  return new Promise(function(resolve, reject) {
-    wx.downloadFile({
-      url: url,
-      success: (res)=>{
-        resolve(res.tempFilePath);
-        cache[url] = res.tempFilePath;
-      },
-      fail: ()=>{
-        reject(err);
-      }
-    });
-  });
-}
-// 图片临时地址缓存
-const cache = {};
 
 class Poster {
   constructor({width, height, scale, canvasId}) {
@@ -150,8 +154,9 @@ class Poster {
     }
 
     for (let om of omTree) {
-      await om.draw(ctx);
+        await om.draw(ctx);
     }
+    
     return new Promise((resolve, reject) => {
       ctx.draw(false, () => {
         wx.canvasToTempFilePath({
