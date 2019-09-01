@@ -1,18 +1,19 @@
 // 下载图片
-function downImg(url) {
+function downImg(url, header) {
   if (!url) {
     console.error('图片url 不能为空');
     throw new Error('图片url 不能为空');
   }
   if (/wxfile\:\/\//.test(url)) {
-    return cache[url];
+    return cache[url] || url;
   }
   if (cache[url]) {
     return cache[url];
   }
   return new Promise(function(resolve, reject) {
     wx.downloadFile({
-      url: url,
+      url: url.replace('http:', 'https:'),
+      header: header || {},
       success: (res)=>{
         resolve(res.tempFilePath);
         cache[url] = res.tempFilePath;
@@ -39,12 +40,13 @@ class Image extends Sprite {
   constructor (config) {
     super(config);
     this.src = config.src;
-    this.radius = config.radius;
+    this.radius = config.borderRadius || config.radius;
+    this.header = config.header || {};
   }
 
   async draw(ctx) {
     ctx.save();
-    let src = await downImg(this.src);
+    let src = await downImg(this.src, this.header);
     if (this.radius === '50%') {
       this.r = this.width / 2;
       ctx.beginPath();
@@ -62,8 +64,9 @@ class Text extends Sprite {
     super(config);
     this.text = config.text;
     this.color = config.color;
-    this.font = config.font || '12px sans-serif';
+    this.font = config.font || config.fontSize + 'px sans-serif' || '12px sans-serif';
     this.width = config.width;
+    this.lineHeight = config.lineHeight || 1.2;
     this.fontSize = +this.font.match(/\d+/)[0];
   }
 
@@ -97,7 +100,7 @@ class Text extends Sprite {
             arr.push(this.text.substr(i * len, len));
           }
         }
-        arr.forEach((str, i) => ctx.fillText(str, this.x, this.y + this.fontSize * (i + 1) * 1.2));
+        arr.forEach((str, i) => ctx.fillText(str, this.x, this.y + this.fontSize * (i + 1) * this.lineHeight));
       }
 
     } else {
@@ -154,7 +157,12 @@ class Poster {
     }
 
     for (let om of omTree) {
+      // console.log(om)
+      try{
         await om.draw(ctx);
+      } catch (err) {
+        console.error(err);
+      }
     }
     
     return new Promise((resolve, reject) => {
@@ -166,8 +174,7 @@ class Poster {
           height: this.height * this.scale,
           canvasId: this.canvasId,
           quality: 0.8,
-          success(res) {
-            console.log(res);
+          success: (res) => {
             resolve(res.tempFilePath);
           },
           fail(err) {
@@ -176,7 +183,6 @@ class Poster {
         });
       });
     });
-
   }
   clear() {
     this.ctx.scale(1, 1);
